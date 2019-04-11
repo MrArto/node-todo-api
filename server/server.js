@@ -15,16 +15,22 @@ app.post('/todos', (req, res) => {
   });
   todo.save().then((doc) => {
     res.send(doc);
-    console.log('the dos is saves as: ', doc);
+  //  console.log('the dos is saves as: ', doc);
   }, (err) => {
     res.status(400).send(err);
-    console.log('Faild so save for some reason such as: ', err);
+    //console.log('Faild so save for some reason such as: ', err);
   });
-  console.log(req.body);
+  //console.log(req.body);
 });
 
 
-
+app.get('/todos', (req, res) => {
+Todo.find().then((todos) => {
+  res.send({todos});
+}, (e) => {
+  res.status(400).send(e);
+});
+});
 
 app.listen(3000, () => {
   console.log('Starting on port 3000');
@@ -67,3 +73,7 @@ app.listen(3000, () => {
 // }, (e) => {
 //   console.log('faild for some reason such as: ', e);
 // });
+
+
+//"echo \"Error: no test specified\" && exit 1"
+module.exports = {app};
