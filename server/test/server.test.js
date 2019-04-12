@@ -85,7 +85,7 @@ describe('Get/todos', () => {
 
 describe('GET/Todos/:id', () => {
 
-  if('should return todo doc', (done) => {
+  it('should return todo doc', (done) => {
     request(app)
     .get(`/todo/${todos[0]._id.toHexString()}`)
     .expect(200)
@@ -116,7 +116,7 @@ it('should return 404 if id is not valid', (done) => {
 
 describe('Delete/Todos/:id', () => {
 
-  if('should remove a todo', (done) => {
+  it('should remove a todo', (done) => {
     var hexID = todos[1]._id.toHexString();
     request(app)
     .delete(`/todos/${hexID}`)
