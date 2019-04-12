@@ -58,12 +58,11 @@ res.send({todo});
 
 
 app.delete('/todos/:id', (req, res) => {
-  var id = req.param.id;
+  var id = req.params.id;
   //validate
   if (!ObjectID.isValid(id)) {
     return res.status(404).send();
   };
-
   Todo.findByIdAndDelete(id).then((todo) => {
     if (!todo ) {
       return res.status(200).send();
