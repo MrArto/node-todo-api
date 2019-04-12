@@ -8,6 +8,7 @@ var {User} = require('./models/user.js');
 
 
 var app = express();
+var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -38,6 +39,7 @@ Todo.find().then((todos) => {
 //get/todos/13548
 app.get('/todos/:id', (req, res) => {
   var id = req.params.id;
+//validate
 if (!ObjectID.isValid(id)) {
   return res.status(404).send();
 };
@@ -55,11 +57,26 @@ res.send({todo});
 
 
 
+app.delete('/todos/:id', (req, res) => {
+  var id = req.param.id;
+  //validate
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  };
+
+  Todo.findByIdAndDelete(id).then((todo) => {
+    if (!todo ) {
+      return res.status(200).send();
+    };
+      res.send(todo);
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
 
 
-
-app.listen(3000, () => {
-  console.log('Starting on port 3000');
+app.listen(port, () => {
+  console.log(`Starting on port ${port}`);
 })
 // var newTodo = new Todo({
 //   text: 'Cook dinner'
