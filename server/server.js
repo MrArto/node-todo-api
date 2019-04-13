@@ -1,6 +1,10 @@
+require('./config/config.js');
+
+
+//'mongodb://localhost:27017/TodoApp', {useNewUrlParser: true}
 const _ = require('lodash')
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose.js');
