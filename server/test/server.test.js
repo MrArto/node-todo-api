@@ -12,7 +12,9 @@ const todos = [{
   text: "First text todo"
 }, {
   _id: new ObjectID(),
-  text: "Second text todo"
+  text: "Second text todo",
+  completed: true,
+  completedAt: 333
 }];
 
 
@@ -87,7 +89,7 @@ describe('GET/Todos/:id', () => {
 
   it('should return todo doc', (done) => {
     request(app)
-    .get(`/todo/${todos[0]._id.toHexString()}`)
+    .get(`/todos/${todos[0]._id.toHexString()}`)
     .expect(200)
     .expect((res) => {
       expect(res.body.todo.text).toBe(todos[0].text);
@@ -122,7 +124,7 @@ describe('Delete/Todos/:id', () => {
     .delete(`/todos/${hexID}`)
     .expect(200)
     .expect((res) => {
-      expect(res.body.todo.text).toBe(hexID);
+      expect(res.body.todo._id).toBe(hexID);
     })
     .end((err, res) => {
        if (err) {
@@ -130,7 +132,7 @@ describe('Delete/Todos/:id', () => {
        }
          Todo.findById(hexID)
          .then((todo) => {
-           expect(todo).toNotExist();
+           expect(todo).toBeFalsy();
            done();
          })
        .catch((e) => done(e));
@@ -159,7 +161,47 @@ it('should return 404 if ObjectId is not valid', (done) => {
 
 
 
+describe('PATCH /todos/:id', () => {
 
+it('should update the todo', (done) => {
+  var hexID = todos[0]._id.toHexString();
+  var text = 'This is a new text';
+
+  request(app)
+  .patch(`/todos/${hexID}`)
+  .send({completed: true,
+    text: text
+  })
+  .expect(200)
+  .expect((res) => {
+    expect(res.body.todo.text).toBe(text);
+    expect(res.body.todo.completed).toBe(true);
+    expect(typeof res.body.todo.completedAt).toBe('number');
+  })
+  .end(done);
+});
+
+it('should clear completed when todo is not comleted', (done) => {
+  var hexID = todos[1]._id.toHexString();
+  var text = 'This is a new text!! new text';
+
+  request(app)
+  .patch(`/todos/${hexID}`)
+  .send({completed: false,
+    text: text
+  })
+  .expect(200)
+  .expect((res) => {
+    expect(res.body.todo.text).toBe(text);
+    expect(res.body.todo.completed).toBe(false);
+    expect(res.body.todo.completedAt).toBeFalsy();//toBe('number');
+  })
+  .end(done);
+
+});
+
+
+});
 
 
 
