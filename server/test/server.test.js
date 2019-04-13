@@ -5,8 +5,6 @@ const {ObjectID} = require('mongodb');
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
-
-
 const todos = [{
   _id: new ObjectID(),
   text: "First text todo"
@@ -17,18 +15,15 @@ const todos = [{
   completedAt: 333
 }];
 
-
-
 beforeEach((done) => {
 Todo.deleteMany({}).then(() => {
   return Todo.insertMany(todos)
 }).then(() => done());
 });
 
-
 describe('Post /todos', () => {
 it('should create new todo', (done) => {
-  var text = 'Test todo text';
+var text = 'Test todo text';
 
 request(app)
 .post('/todos')
@@ -50,7 +45,6 @@ request(app)
 });
 });
 
-
 it('should not create todo with invaled data', (done) => {
     request(app)
     .post('/todos')
@@ -67,7 +61,6 @@ it('should not create todo with invaled data', (done) => {
       }).catch((e) => done(e));
     });
 });
-
 });
 
 
@@ -82,7 +75,6 @@ describe('Get/todos', () => {
     .end(done);
   });
 });
-
 
 
 describe('GET/Todos/:id', () => {
@@ -155,10 +147,7 @@ it('should return 404 if ObjectId is not valid', (done) => {
   .expect(404)
   .end(done);
 });
-
 });
-
-
 
 
 describe('PATCH /todos/:id', () => {
@@ -199,36 +188,4 @@ it('should clear completed when todo is not comleted', (done) => {
   .end(done);
 
 });
-
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//////

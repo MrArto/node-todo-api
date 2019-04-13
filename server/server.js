@@ -1,7 +1,5 @@
 require('./config/config.js');
 
-
-//'mongodb://localhost:27017/TodoApp', {useNewUrlParser: true}
 const _ = require('lodash')
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,7 +8,6 @@ const {ObjectID} = require('mongodb');
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo.js');
 var {User} = require('./models/user.js');
-
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -23,23 +20,18 @@ app.post('/todos', (req, res) => {
   });
   todo.save().then((doc) => {
     res.send(doc);
-  //  console.log('the dos is saves as: ', doc);
   }, (err) => {
     res.status(400).send(err);
-    //console.log('Faild so save for some reason such as: ', err);
   });
-  //console.log(req.body);
 });
-
 
 app.get('/todos', (req, res) => {
 Todo.find().then((todos) => {
   res.send({todos});
 }, (e) => {
   res.status(400).send(e);
+ });
 });
-});
-
 
 //get/todos/13548
 app.get('/todos/:id', (req, res) => {
@@ -60,8 +52,6 @@ res.send({todo});
   })
 });
 
-
-
 app.delete('/todos/:id', (req, res) => {
   var id = req.params.id;
   //validate
@@ -78,8 +68,6 @@ app.delete('/todos/:id', (req, res) => {
   });
 });
 
-
-
 app.patch('/todos/:id', (req, res) => {
   var id = req.params.id;
   var body = _.pick(req.body, ['text', 'completed']);
@@ -93,10 +81,6 @@ if (_.isBoolean(body.completed) && body.completed) {
   body.completed = false;
   body.completedAt = null;
 };
-console.log(id);
-console.log(body.completed);
-console.log(new Date().getTime());
-console.log(body);
 Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
   if (!todo) {
     return res.status(404).send();
@@ -108,6 +92,22 @@ Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
 });
 
 
+//Post /users
+app.post('/users', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+  //   var user = new User({
+  //   email: req.body.email,
+  //   password: req.body.password
+  // });
+  var user = new User(body);
+
+  user.save().then((user) => {
+    res.send(user);
+  }, (err) => {
+    res.status(400).send(err);
+  });
+});
+
 
 
 app.listen(port, () => {
@@ -117,15 +117,11 @@ app.listen(port, () => {
 //   text: 'Cook dinner'
 // });
 //
-//
-//
 // newTodo.save().then((doc) => {
 //   console.log('Saved Todo: ', doc);
 // }, (e) => {
 //   console.log('Unable to save to ToDo: ', e);
 // });
-
-
 
 // var NewTodo1 = new Todo({
 //   text: 'node learn',
@@ -140,8 +136,6 @@ app.listen(port, () => {
 //   console.log('unable to save int Todos you last satk named: ', e);
 // });
 
-
-//
 // var userik = new User({
 // email: 'aaaaa'
 // });
@@ -152,6 +146,4 @@ app.listen(port, () => {
 //   console.log('faild for some reason such as: ', e);
 // });
 
-
-//"echo \"Error: no test specified\" && exit 1"
 module.exports = {app};
