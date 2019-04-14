@@ -100,14 +100,19 @@ app.post('/users', (req, res) => {
   //   password: req.body.password
   // });
   var user = new User(body);
-
-  user.save().then((user) => {
-    res.send(user);
-  }, (err) => {
-    res.status(400).send(err);
-  });
+  user.save().then(() => {
+//     res.send(user);
+//   }, (err) => {
+//     res.status(400).send(err);
+//   });
+// });
+return user.generateAuthToken();
+}).then((token) => {
+  res.header('x-auth', token).send(user);
+}).catch((e) => {
+  res.status(400).send(e);
 });
-
+});
 
 
 app.listen(port, () => {
